@@ -1,7 +1,7 @@
 package afmt
 
 import (
-// "./internal/printer"
+	"./printer"
 )
 
 type testStruct struct {
@@ -17,7 +17,9 @@ type testStruct struct {
 
 // PrintTree ...
 func PrintTree(structure interface{}) {
+	p := printer.NewPrinter(
+		printer.OptionIgnoreUnsupported(true),
+	)
 
-	// printer.PrintStruct(structure)
-
+	p.Tree(structure)
 }

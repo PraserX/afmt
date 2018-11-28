@@ -8,12 +8,14 @@ import (
 
 type Printer struct {
 	ignoreUnsupported bool
+	padding           uint
 }
 
 func NewPrinter(opts ...Option) *Printer {
 	// Default values
 	var options = &Options{
 		IgnoreUnsupported: true,
+		Padding:           4,
 	}
 
 	for _, opt := range opts {
@@ -27,7 +29,11 @@ func NewPrinter(opts ...Option) *Printer {
 	return nil
 }
 
-func (p *Printer) printStruct(inspect interface{}) error {
+func (p *Printer) Tree(inspect interface{}) error {
+	return nil
+}
+
+func (p *Printer) printTreeStruct(inspect interface{}) error {
 
 	if reflect.TypeOf(inspect).Kind() == reflect.Struct {
 
@@ -36,7 +42,17 @@ func (p *Printer) printStruct(inspect interface{}) error {
 		for i := 0; i < val.NumField(); i++ {
 			switch val.Field(i).Kind() {
 			case reflect.Int:
-				p.printNumber(val.Field(i))
+				p.printTreeNumber(val.Field(i))
+			case reflect.Int8:
+				p.printTreeNumber(val.Field(i))
+			case reflect.Int16:
+				p.printTreeNumber(val.Field(i))
+			case reflect.Int32:
+				p.printTreeNumber(val.Field(i))
+			case reflect.Int64:
+				p.printTreeNumber(val.Field(i))
+			case reflect.Float32:
+				p.printTreeNumber(val.Field(i))
 			default:
 				if p.ignoreUnsupported == false {
 					return fmt.Errorf("Type %s", reflect.TypeOf(val.Field(i)))
@@ -92,14 +108,14 @@ func (p *Printer) printStruct(inspect interface{}) error {
 	// fmt.Println(reflect.ValueOf(inspect))
 }
 
-func (p *Printer) printArray(inspect interface{}) {
+func (p *Printer) printTreeArray(inspect interface{}) {
 
 }
 
-func (p *Printer) printString(inspect interface{}) {
+func (p *Printer) printTreeString(inspect interface{}) {
 
 }
 
-func (p *Printer) printNumber(inspect interface{}) {
+func (p *Printer) printTreeNumber(inspect interface{}) {
 
 }
