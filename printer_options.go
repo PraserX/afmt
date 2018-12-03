@@ -10,6 +10,8 @@ type PrinterOptions struct {
 	Padding uint
 	// Pretty name for printer
 	PrettyNames map[string]string
+	// Ignore specified parts of structure (do not print these ones)
+	IgnoreNames []string
 }
 
 // PrinterOption specification for Printer package.
@@ -33,5 +35,12 @@ func PrinterOptionPadding(padding uint) PrinterOption {
 func PrinterOptionPrettyNames(names map[string]string) PrinterOption {
 	return func(opts *PrinterOptions) {
 		opts.PrettyNames = names
+	}
+}
+
+// PrinterOptionIgnoreNames option specification.
+func PrinterOptionIgnoreNames(names []string) PrinterOption {
+	return func(opts *PrinterOptions) {
+		opts.IgnoreNames = names
 	}
 }

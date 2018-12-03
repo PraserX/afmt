@@ -5,22 +5,13 @@ import (
 	"reflect"
 )
 
-const (
-	// Empty path for prefix
-	pathE = "    "
-	// T path for prefix
-	pathT = "├── "
-	// I path for prefix
-	pathI = "│   "
-	// L path for prefix
-	pathL = "└── "
-)
-
 // Printer definition.
 type Printer struct {
+	//
 	ignoreUnsupported bool
 	padding           uint
 	prettyNames       map[string]string
+	ignoreNames       []string
 }
 
 // NewPrinter create new Printer `instance`.
@@ -29,6 +20,7 @@ func NewPrinter(opts ...PrinterOption) *Printer {
 		IgnoreUnsupported: true,
 		Padding:           4,
 		PrettyNames:       map[string]string{},
+		IgnoreNames:       []string{},
 	}
 
 	for _, opt := range opts {
@@ -39,17 +31,21 @@ func NewPrinter(opts ...PrinterOption) *Printer {
 		ignoreUnsupported: options.IgnoreUnsupported,
 		padding:           options.Padding,
 		prettyNames:       options.PrettyNames,
+		ignoreNames:       options.IgnoreNames,
 	}
 }
 
 // Tree provides printing of structures or other ...
 func (p *Printer) Tree(inspect interface{}) error {
 	var level = []bool{}
-	p.inspectInterface(inspect, level, "")
-	return nil
+	return p.inspectInterface(inspect, level, "")
 }
 
 func (p *Printer) printStruct(inspect interface{}, lvl []bool) {
+	if p.isIgnored(reflect.TypeOf(inspect).Name()) {
+		return
+	}
+
 	if reflect.TypeOf(inspect).Name() != "" {
 		fmt.Printf("%s%s:\n", p.getPrefix(lvl), p.getPrettyName(reflect.TypeOf(inspect).Name()))
 	} else {
@@ -62,16 +58,22 @@ func (p *Printer) printStruct(inspect interface{}, lvl []bool) {
 		val := reflect.ValueOf(inspect)
 
 		for i := 0; i < val.NumField(); i++ {
-			if i == val.NumField()-1 {
-				level[len(level)-1] = true // set true if it is last item
-			}
+			if !p.isIgnored(val.Type().Field(i).Name) {
+				if i == val.NumField()-1 {
+					level[len(level)-1] = true // set true if it is last item
+				}
 
-			p.inspectInterface(val.Field(i).Interface(), level, p.getPrettyName(val.Type().Field(i).Name))
+				p.inspectInterface(val.Field(i).Interface(), level, p.getPrettyName(val.Type().Field(i).Name))
+			}
 		}
 	}
 }
 
 func (p *Printer) printArray(inspect interface{}, lvl []bool, name string) {
+	if p.isIgnored(reflect.TypeOf(inspect).Name()) {
+		return
+	}
+
 	fmt.Printf("%s%s:\n", p.getPrefix(lvl), name)
 
 	var level = append(lvl, false)
@@ -169,17 +171,17 @@ func (p *Printer) getPrefix(lvl []bool) string {
 
 	for i := 0; i < level; i++ {
 		if level == 1 && lvl[i] == true {
-			levelPrefix += pathL
+			levelPrefix += fmt.Sprintf("└%s ", p.applyPadding("─"))
 		} else if level == 1 && lvl[i] == false {
-			levelPrefix += pathT
+			levelPrefix += fmt.Sprintf("├%s ", p.applyPadding("─"))
 		} else if i+1 == level && lvl[i] == false {
-			levelPrefix += pathT
+			levelPrefix += fmt.Sprintf("├%s ", p.applyPadding("─"))
 		} else if i+1 == level && lvl[i] == true {
-			levelPrefix += pathL
+			levelPrefix += fmt.Sprintf("└%s ", p.applyPadding("─"))
 		} else if lvl[i] == true {
-			levelPrefix += pathE
+			levelPrefix += fmt.Sprintf(" %s ", p.applyPadding(" "))
 		} else {
-			levelPrefix += pathI
+			levelPrefix += fmt.Sprintf("│%s ", p.applyPadding(" "))
 		}
 	}
 
@@ -192,4 +194,24 @@ func (p *Printer) getPrettyName(name string) string {
 	}
 
 	return name
+}
+
+func (p *Printer) applyPadding(filler string) string {
+	var fill string
+
+	for i := 0; i < int(p.padding)-2; i++ {
+		fill += filler
+	}
+
+	return fill
+}
+
+func (p *Printer) isIgnored(name string) bool {
+	for _, n := range p.ignoreNames {
+		if name == n {
+			return true
+		}
+	}
+
+	return false
 }

@@ -23,6 +23,10 @@ type testStruct2 struct {
 }
 
 func TestPrintTree(t *testing.T) {
+
+}
+
+func TestEchoTree(t *testing.T) {
 	str := testStruct{}
 	str.Level0101.Level0201 = "Lorem ipsum dolor sit amet"
 	str.Level0102.Level0201 = "Lorem ipsum dolor sit amet"
