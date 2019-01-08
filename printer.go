@@ -41,6 +41,14 @@ func (p *Printer) Tree(inspect interface{}) error {
 	return p.inspectInterface(inspect, level, "")
 }
 
+func (p *Printer) printPointer(inspect interface{}, lvl []bool) {
+	if p.isIgnored(reflect.TypeOf(inspect).Name()) {
+		return
+	}
+
+	p.inspectInterface(reflect.Indirect(reflect.ValueOf(inspect)).Interface(), lvl, "")
+}
+
 func (p *Printer) printStruct(inspect interface{}, lvl []bool) {
 	if p.isIgnored(reflect.TypeOf(inspect).Name()) {
 		return
@@ -135,6 +143,8 @@ func (p Printer) inspectInterface(inspect interface{}, level []bool, name string
 	val := reflect.ValueOf(inspect)
 
 	switch val.Kind() {
+	case reflect.Ptr:
+		p.printPointer(inspect, level)
 	case reflect.Struct:
 		p.printStruct(inspect, level)
 
