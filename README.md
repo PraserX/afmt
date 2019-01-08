@@ -1,3 +1,5 @@
+![](https://travis-ci.org/PraserX/afmt.svg?branch=master)
+
 # Advanced formatter
 
 ```
