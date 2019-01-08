@@ -61,5 +61,5 @@ func TestPrintTree02(t *testing.T) {
 	str.Level0103 = nil
 	PrintTree(str)
 
-	t.FailNow()
+	// t.FailNow()
 }
