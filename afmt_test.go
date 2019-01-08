@@ -24,6 +24,7 @@ type testStruct02 struct {
 		Level0201 *string
 		Level0202 *int
 	}
+	Level0103 *testStruct01x2
 }
 
 type testStruct01x2 struct {
@@ -57,7 +58,8 @@ func TestPrintTree02(t *testing.T) {
 	str.Level0101 = strct
 	str.Level0102.Level0201 = &strng
 	str.Level0102.Level0202 = &intgr
+	str.Level0103 = nil
 	PrintTree(str)
 
-	// t.FailNow()
+	t.FailNow()
 }
