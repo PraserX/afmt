@@ -15,29 +15,29 @@ type TreePrinterOptions struct {
 // TreePrinterOption specification for Printer package.
 type TreePrinterOption func(*TreePrinterOptions)
 
-// PrinterOptionIgnoreUnsupported option specification.
-func PrinterOptionIgnoreUnsupported(ignoreUnsupported bool) TreePrinterOption {
+// TreePrinterOptionIgnoreUnsupported option specification.
+func TreePrinterOptionIgnoreUnsupported(ignoreUnsupported bool) TreePrinterOption {
 	return func(opts *TreePrinterOptions) {
 		opts.IgnoreUnsupported = ignoreUnsupported
 	}
 }
 
-// PrinterOptionPadding option specification.
-func PrinterOptionPadding(padding uint) TreePrinterOption {
+// TreePrinterOptionPadding option specification.
+func TreePrinterOptionPadding(padding uint) TreePrinterOption {
 	return func(opts *TreePrinterOptions) {
 		opts.Padding = padding
 	}
 }
 
-// PrinterOptionPrettyNames option specification.
-func PrinterOptionPrettyNames(names map[string]string) TreePrinterOption {
+// TreePrinterOptionPrettyNames option specification.
+func TreePrinterOptionPrettyNames(names map[string]string) TreePrinterOption {
 	return func(opts *TreePrinterOptions) {
 		opts.PrettyNames = names
 	}
 }
 
-// PrinterOptionIgnoreNames option specification.
-func PrinterOptionIgnoreNames(names []string) TreePrinterOption {
+// TreePrinterOptionIgnoreNames option specification.
+func TreePrinterOptionIgnoreNames(names []string) TreePrinterOption {
 	return func(opts *TreePrinterOptions) {
 		opts.IgnoreNames = names
 	}
