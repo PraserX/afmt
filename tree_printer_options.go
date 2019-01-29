@@ -1,3 +1,5 @@
+// Package afmt (Advanced formatter or Advanced fmt) implement some extensions
+// for fmt package. The main feature is print to tree structure.
 package afmt
 
 // TreePrinterOptions are used for Server construct function.
