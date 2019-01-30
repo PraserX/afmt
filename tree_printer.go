@@ -47,20 +47,6 @@ func (p *TreePrinter) Print(inspect interface{}) (string, error) {
 	return p.inspectInterface(inspect, level, "")
 }
 
-// printPointer transforms pointer to value and continue with interface
-// inspection. If pointer is nil, then empty string is returned.
-func (p *TreePrinter) printPointer(inspect interface{}, lvl []bool) (string, error) {
-	if p.isIgnored(reflect.TypeOf(inspect).Name()) {
-		return "", nil
-	}
-
-	if reflect.ValueOf(inspect).Pointer() == 0 {
-		return "", nil
-	}
-
-	return p.inspectInterface(reflect.Indirect(reflect.ValueOf(inspect)).Interface(), lvl, "")
-}
-
 // printStruct provides extraction of structure items and continue with
 // interface inspection. Extraction process also includes elimination of ignored
 // values.
@@ -100,6 +86,24 @@ func (p *TreePrinter) printStruct(inspect interface{}, lvl []bool) (string, erro
 	}
 
 	return structName + ires, nil
+}
+
+// printPointer transforms pointer to value and continue with interface
+// inspection. If pointer is nil, then empty string is returned.
+func (p *TreePrinter) printPointer(inspect interface{}, lvl []bool, name string) (string, error) {
+	if p.isIgnored(reflect.TypeOf(inspect).Name()) {
+		return "", nil
+	}
+
+	if reflect.ValueOf(inspect).Pointer() == 0 {
+		return "", nil
+	}
+
+	if name != "" {
+		return p.inspectInterface(reflect.Indirect(reflect.ValueOf(inspect)).Interface(), lvl, name)
+	}
+
+	return p.inspectInterface(reflect.Indirect(reflect.ValueOf(inspect)).Interface(), lvl, "")
 }
 
 // printArray provides extraction of array items and continue with interface
@@ -190,7 +194,7 @@ func (p TreePrinter) inspectInterface(inspect interface{}, level []bool, name st
 
 	switch val.Kind() {
 	case reflect.Ptr:
-		res, err = p.printPointer(inspect, level)
+		res, err = p.printPointer(inspect, level, name)
 	case reflect.Struct:
 		res, err = p.printStruct(inspect, level)
 	case reflect.Array, reflect.Slice:

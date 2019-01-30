@@ -69,30 +69,30 @@ type testBasicStruct struct {
 	Item3 *string
 }
 
-// func TestBasicStruct(t *testing.T) {
-// 	var err error
-// 	var result string
+func TestBasicStruct(t *testing.T) {
+	var err error
+	var result string
 
-// 	predictedResult := "testBasicStruct:\n"
-// 	predictedResult += "├── Item1: Lorem ipsum dolor sit amet\n"
-// 	predictedResult += "├── Item2: 5\n"
-// 	predictedResult += "└── Item3: Lorem ipsum dolor sit amet\n"
+	predictedResult := "testBasicStruct:\n"
+	predictedResult += "├── Item1: Lorem ipsum dolor sit amet\n"
+	predictedResult += "├── Item2: 5\n"
+	predictedResult += "└── Item3: Lorem ipsum dolor sit amet\n"
 
-// 	tp := NewTreePrinter()
-// 	testString := "Lorem ipsum dolor sit amet"
+	tp := NewTreePrinter()
+	testString := "Lorem ipsum dolor sit amet"
 
-// 	var testValue = testBasicStruct{
-// 		Item1: testString,
-// 		Item2: 5,
-// 		Item3: &testString,
-// 	}
+	var testValue = testBasicStruct{
+		Item1: testString,
+		Item2: 5,
+		Item3: &testString,
+	}
 
-// 	if result, err = tp.Print(testValue); err != nil {
-// 		t.Errorf("Error fired! %s", err.Error())
-// 	}
+	if result, err = tp.Print(testValue); err != nil {
+		t.Errorf("Error fired! %s", err.Error())
+	}
 
-// 	if result != predictedResult {
-// 		t.Logf(result)
-// 		t.Errorf("Unpredictable result")
-// 	}
-// }
+	if result != predictedResult {
+		t.Logf(result)
+		t.Errorf("Unpredictable result")
+	}
+}
