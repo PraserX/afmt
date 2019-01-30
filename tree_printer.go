@@ -123,7 +123,7 @@ func (p *TreePrinter) printArray(inspect interface{}, lvl []bool, name string) (
 		val := reflect.ValueOf(inspect)
 
 		for i := 0; i < val.Len(); i++ {
-			if p.isLastNonIgnored(inspect, i) {
+			if i+1 == val.Len() {
 				level[len(level)-1] = true // set true if it is last item
 			}
 
@@ -290,13 +290,7 @@ func (p *TreePrinter) isLastNonIgnored(inspect interface{}, index int) bool {
 
 	if reflect.TypeOf(inspect).Kind() == reflect.Struct {
 		for i := index + 1; i < val.NumField(); i++ {
-			if !p.isIgnored(reflect.TypeOf(val.Field(i).Interface()).Name()) {
-				return false
-			}
-		}
-	} else if reflect.TypeOf(inspect).Kind() == reflect.Array || reflect.TypeOf(inspect).Kind() == reflect.Slice {
-		for i := index + 1; i < val.Len(); i++ {
-			if !p.isIgnored(reflect.TypeOf(val.Index(i).Interface()).Name()) {
+			if !p.isIgnored(val.Type().Field(i).Name) {
 				return false
 			}
 		}
