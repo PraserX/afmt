@@ -123,3 +123,62 @@ func TestBasicIgnore(t *testing.T) {
 		t.Errorf("Unpredictable result")
 	}
 }
+
+func TestBasicPrettyNames(t *testing.T) {
+	var err error
+	var result string
+
+	predictedResult := "testBasicStruct:\n"
+	predictedResult += "├── Nice1: Lorem ipsum dolor sit amet\n"
+	predictedResult += "├── Nice2: 5\n"
+	predictedResult += "└── Item3: Lorem ipsum dolor sit amet\n"
+
+	tp := NewTreePrinter(TreePrinterOptionPrettyNames(map[string]string{
+		"Item1": "Nice1",
+		"Item2": "Nice2",
+	}))
+	testString := "Lorem ipsum dolor sit amet"
+
+	var testValue = testBasicStruct{
+		Item1: testString,
+		Item2: 5,
+		Item3: &testString,
+	}
+
+	if result, err = tp.Print(testValue); err != nil {
+		t.Errorf("Error fired! %s", err.Error())
+	}
+
+	if result != predictedResult {
+		t.Logf(result)
+		t.Errorf("Unpredictable result")
+	}
+}
+
+func TestBasicPadding(t *testing.T) {
+	var err error
+	var result string
+
+	predictedResult := "testBasicStruct:\n"
+	predictedResult += "├────── Item1: Lorem ipsum dolor sit amet\n"
+	predictedResult += "├────── Item2: 5\n"
+	predictedResult += "└────── Item3: Lorem ipsum dolor sit amet\n"
+
+	tp := NewTreePrinter(TreePrinterOptionPadding(8))
+	testString := "Lorem ipsum dolor sit amet"
+
+	var testValue = testBasicStruct{
+		Item1: testString,
+		Item2: 5,
+		Item3: &testString,
+	}
+
+	if result, err = tp.Print(testValue); err != nil {
+		t.Errorf("Error fired! %s", err.Error())
+	}
+
+	if result != predictedResult {
+		t.Logf(result)
+		t.Errorf("Unpredictable result")
+	}
+}
