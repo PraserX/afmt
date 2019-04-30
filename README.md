@@ -4,7 +4,20 @@
 
 It is an extension of standard Golang formatter. It contains (or it will contain) some advanced features for command line print. All features are described bellow.
 
-## TreePrint
+## Features
+
+- Line wrap (`PrintCol`)
+- Tree print (`PrintTree`)
+
+### PrintCol
+
+The `PrintCol` function (and its derivations) allow wrap text based on integer specification. It means that you can set your stop mark and start print of text on the new line.
+
+```go
+afmt.PrintCol(80, "This is my longest text ever.")
+```
+
+### PrintTree
 
 The TreePrinter expect any type as argument. It use interfaces, which are analyzed and printed. So you can use string, integer, array, structure and etc. The power of TreePrinter is that you can use any structure and TreePrinter prints it for you. There are many settings, which you can use.
 
@@ -63,7 +76,7 @@ MyStructure:
 
 ## Planned features
 
-- Line wrap (by value)
+- Text padding
 - Progress bar
 
 Is something missing? Create issue and describe your idea!
